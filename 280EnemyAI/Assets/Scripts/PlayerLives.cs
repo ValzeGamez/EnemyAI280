@@ -24,7 +24,7 @@ public class PlayerLives : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         //If player is hit by tag "bullet", player loses a life
-        if (other.gameObject.tag == "bullet")
+        if (other.gameObject.tag == "enemyBullet")
         {
             playerLives--;
             Destroy(other.gameObject);
