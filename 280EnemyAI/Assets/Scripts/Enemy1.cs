@@ -13,8 +13,6 @@ public class Enemy1 : MonoBehaviour
     public bool lookAt;
     Rigidbody rb;
     public GameObject player;
-    public float speedMultiplier;
-    public float speedLimit;
     
     public Material mat;
 
@@ -27,7 +25,7 @@ public class Enemy1 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        mat.color = Color.blue;      
+        mat.color = Color.black;      
     }
 
     // Update is called once per frame
@@ -49,7 +47,8 @@ public class Enemy1 : MonoBehaviour
             Vector3 vel = rb.velocity;
             if (PlayerDetection.targetFound && vel.x > -2 && vel.x < 2 && vel.z > -2 && vel.z < 2)
             {
-                rb.AddForce(moveSpeed * speedMultiplier * Time.deltaTime * transform.forward);
+                // rb.AddForce((moveSpeed * Time.deltaTime) * transform.forward);
+                transform.position = Vector2.MoveTowards(transform.position, player.transform.position, moveSpeed * Time.deltaTime);
             }
         }
  
@@ -77,7 +76,7 @@ public class Enemy1 : MonoBehaviour
     {
         mat.color = Color.red;
         yield return new WaitForSeconds(.3f);
-        mat.color = Color.blue;
+        mat.color = Color.black;
     }
 
 }
