@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy1 : MonoBehaviour
+public class ChaseEnemy : MonoBehaviour
 {
     [SerializeField]
-    private int enemyHealth = 4;
+    private int enemyHealth = 10;
     [SerializeField]
     private float moveSpeed;
 
@@ -13,25 +13,32 @@ public class Enemy1 : MonoBehaviour
     public bool lookAt;
     Rigidbody rb;
     public GameObject player;
-    
+
     public Material mat;
 
     private void Awake()
     {
 
         rb = gameObject.GetComponent<Rigidbody>();
-        
+
     }
     // Start is called before the first frame update
     void Start()
     {
-        mat.color = Color.black;      
+        mat.color = Color.white;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(enemyHealth <= 0)
+        if (enemyHealth == 5)
+        {
+            PlayerDetection.targetFound = false;
+            lookAt = false;
+            //gameObject.GetComponent<PlayerDetection>().enabled = false;            
+            StartCoroutine(Wait());         
+        }
+        if (enemyHealth <= 0)
         {
             Destroy(gameObject);
         }
@@ -51,12 +58,12 @@ public class Enemy1 : MonoBehaviour
                 transform.position = Vector2.MoveTowards(transform.position, player.transform.position, moveSpeed * Time.deltaTime);
             }
         }
- 
+
     }
 
     private void FixedUpdate()
     {
-        
+
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -66,17 +73,28 @@ public class Enemy1 : MonoBehaviour
             enemyHealth--;
             Destroy(collision.gameObject);
             StartCoroutine(DamageFeedback());
-            if(this.gameObject.tag == "detection")
+            if (this.gameObject.tag == "detection")
             {
                 Debug.Log("detection");
             }
         }
-    }   
+    }
     IEnumerator DamageFeedback()
     {
         mat.color = Color.red;
         yield return new WaitForSeconds(.3f);
-        mat.color = Color.black;
+        mat.color = Color.white;
     }
 
+    IEnumerator Wait()
+    {
+        mat.color = Color.red;
+        yield return new WaitForSeconds(4);
+        enemyHealth = 10;
+        //gameObject.GetComponent<PlayerDetection>().enabled = true;
+        mat.color = Color.white;
+        PlayerDetection.targetFound = true;
+        lookAt = true;
+        yield break;
+    }
 }
